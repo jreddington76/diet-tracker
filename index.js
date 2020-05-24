@@ -4,10 +4,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('express-flash');
-const { MongoClient } = require('mongodb');
-const routes = require('./routes');
 
-const url = "mongodb://localhost:27017/";
+const routes = require('./routes');
 
 const app = express();
 
@@ -41,21 +39,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
-});
-
-let db;
-
-MongoClient.connect(url, (err, database) => {
-  if (err) throw err;
-
-  db = database.db("diet-tracker");
-  var cursor = db.collection('users').find();
-
-  cursor.each(function (err, doc) {
-
-    console.log(doc);
-
-  });
 });
 
 app.listen(4242, () => {

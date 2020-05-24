@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult, matchedData } = require('express-validator');
 
+const userService = require('./services/user.service');
+
 const options = [
   'coffee',
   'water',
@@ -58,34 +60,34 @@ router.post('/register', [
     .bail()
     .trim()
     .normalizeEmail(),
-  check('password')
+  check('lastname')
     .isLength({ min: 1 })
-    .withMessage('Message is required')
-    .trim()
+    .withMessage('Last name is required')
+    .trim(),
+  check('firstname')
+    .isLength({ min: 1 })
+    .withMessage('First name is required')
+    .trim(),
+  // check('termsAgreed')
+  //   .isBoolean()
+  //   .withMessage('You must agree to Terms and Conditions')
 ], (req, res) => {
   const errors = validationResult(req);
-  res.render('register', {
-    data: req.body,
-    errors: errors.mapped()
-  });
 
-  const data = matchedData(req);
-  console.log('Sanitized:', data);
+  if (!errors) {
+    res.render('register', {
+      data: req.body,
+      errors: errors.mapped()
+    });
+  } else {
+    const data = matchedData(req, { onlyValidData: false });
+    console.log('Sanitized:', data);
 
-  req.flash('success', 'Thanks for the message! I‘ll be in touch :)');
-  res.redirect('/');
+    userService.addUser(data);
 
-  // const click = { username: 'James' };
-  // console.log(click);
-  // console.log(db);
-
-  // db.collection('users').save(click, (err, result) => {
-  //   if (err) {
-  //     return console.log(err);
-  //   }
-  //   console.log('click added to db');
-  //   res.sendStatus(201);
-  // });
+    req.flash('success', 'Thanks for the message! I‘ll be in touch :)');
+    res.redirect('/');
+  }
 });
 
 module.exports = router;
