@@ -27,11 +27,13 @@ router.get('/', (req, res) => {
 router.get('/favicon.ico', (req, res) => res.status(204));
 
 router.get('/dashboard', auth, (req, res) => {
+  console.log(req.session)
   res.render('dashboard');
 });
 
 
 router.get('/register', (req, res) => {
+  console.log(req.session)
   res.render('register', {
     data: {},
     errors: {}
