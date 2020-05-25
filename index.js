@@ -5,10 +5,11 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('express-flash');
 
-const routes = require('./routes');
+const routes = require('./routes/routes');
 
 const app = express();
 
+app.engine('ejs', require('ejs-locals'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

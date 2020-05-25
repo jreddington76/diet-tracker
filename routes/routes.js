@@ -5,8 +5,8 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-const auth = require('./middleware/auth');
-const userService = require('./services/user.service');
+const auth = require('../middleware/auth');
+const userService = require('../services/user.service');
 
 const options = [
   'coffee',
@@ -21,19 +21,17 @@ const data = {
 };
 
 router.get('/', (req, res) => {
-  res.render('index', { data: data });
+  res.render('home', { data: data });
 });
 
 router.get('/favicon.ico', (req, res) => res.status(204));
 
 router.get('/dashboard', auth, (req, res) => {
-  console.log(req.session)
   res.render('dashboard');
 });
 
 
 router.get('/register', (req, res) => {
-  console.log(req.session)
   res.render('register', {
     data: {},
     errors: {}
@@ -71,9 +69,7 @@ router.post('/register', [
     });
   } else {
     const user = matchedData(req, { onlyValidData: false });
-
     user._id = uuidv4();
-    console.log('Sanitized:', user);
 
     userService.addUser(user);
 
@@ -98,7 +94,6 @@ router.post('/login', [
     .isLength({ min: 8 })
     .withMessage('Password does not meet criteria')
 ], async (req, res) => {
-  console.log(req.body);
   const errors = validationResult(req);
 
   if (!errors) {

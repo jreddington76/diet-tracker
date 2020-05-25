@@ -1,0 +1,25 @@
+<% layout('./layouts/layout') -%>
+<% block('title', 'Home'); -%>
+
+<% if (messages.success) { %>
+<div class="flash flash-success"><%= messages.success %></div>
+<% } %>
+
+<% if (data.loggedIn){ %>
+<h2>Hello, <%= data.username %></h2>
+<% } else { %>
+<h2>Hello, unknown</h2>
+<%  } %>
+
+<div>
+  <select class="custom-select custom-select-lg mb-3">
+    <option selected>Please select</option>
+    <% data.drinks.forEach(result=>{ %>
+    <option value="<%= result %>"><%= result %></option>
+    <% }); %>
+  </select>
+</div>
+
+<button id="myButton">Click me!</button>
+
+<script src="home.js"></script>
